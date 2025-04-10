@@ -15,6 +15,11 @@
 		3E727EDF2672708B006C11AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E727EDD2672708B006C11AC /* LaunchScreen.storyboard */; };
 		3E727EEA2672708B006C11AC /* ANFExploreCardTableViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E727EE92672708B006C11AC /* ANFExploreCardTableViewControllerTests.swift */; };
 		3E727F03267281F7006C11AC /* ANFExploreCardTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E727F02267281F7006C11AC /* ANFExploreCardTableViewController.swift */; };
+		BF63D1E42DA6E12D0010937D /* CustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D1E32DA6E12D0010937D /* CustomCell.swift */; };
+		BF63D1E62DA6EAF80010937D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D1E52DA6EAF80010937D /* MainViewController.swift */; };
+		BF63D1E82DA6EF040010937D /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D1E72DA6EF040010937D /* MainViewModel.swift */; };
+		BF63D1EC2DA72DE80010937D /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D1EB2DA72DE80010937D /* ButtonCell.swift */; };
+		BF63D1EE2DA72E800010937D /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D1ED2DA72E800010937D /* DataModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +45,11 @@
 		3E727EE92672708B006C11AC /* ANFExploreCardTableViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANFExploreCardTableViewControllerTests.swift; sourceTree = "<group>"; };
 		3E727EEB2672708B006C11AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3E727F02267281F7006C11AC /* ANFExploreCardTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANFExploreCardTableViewController.swift; sourceTree = "<group>"; };
+		BF63D1E32DA6E12D0010937D /* CustomCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCell.swift; sourceTree = "<group>"; };
+		BF63D1E52DA6EAF80010937D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		BF63D1E72DA6EF040010937D /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		BF63D1EB2DA72DE80010937D /* ButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
+		BF63D1ED2DA72E800010937D /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +99,11 @@
 				3E727EDD2672708B006C11AC /* LaunchScreen.storyboard */,
 				3E727EE02672708B006C11AC /* Info.plist */,
 				3E4AB9392676D86100C79456 /* exploreData.json */,
+				BF63D1E32DA6E12D0010937D /* CustomCell.swift */,
+				BF63D1E52DA6EAF80010937D /* MainViewController.swift */,
+				BF63D1E72DA6EF040010937D /* MainViewModel.swift */,
+				BF63D1EB2DA72DE80010937D /* ButtonCell.swift */,
+				BF63D1ED2DA72E800010937D /* DataModel.swift */,
 			);
 			path = "ANF Code Test";
 			sourceTree = "<group>";
@@ -205,7 +220,12 @@
 			files = (
 				3E727F03267281F7006C11AC /* ANFExploreCardTableViewController.swift in Sources */,
 				3E727ED326727088006C11AC /* AppDelegate.swift in Sources */,
+				BF63D1E42DA6E12D0010937D /* CustomCell.swift in Sources */,
 				3E727ED526727088006C11AC /* SceneDelegate.swift in Sources */,
+				BF63D1EC2DA72DE80010937D /* ButtonCell.swift in Sources */,
+				BF63D1EE2DA72E800010937D /* DataModel.swift in Sources */,
+				BF63D1E62DA6EAF80010937D /* MainViewController.swift in Sources */,
+				BF63D1E82DA6EF040010937D /* MainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
