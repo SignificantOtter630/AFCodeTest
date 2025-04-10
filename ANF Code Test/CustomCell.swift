@@ -8,28 +8,34 @@
 import Foundation
 import UIKit
 
+protocol CellImageDelegate: AnyObject {
+    func didLoadImage(for cell: CustomCell, image: UIImage)
+}
+
 class CustomCell: UITableViewCell {
     var backgroundImageView = UIImageView()
     var topDescriptionLabel = UILabel()
     var titleLabel = UILabel()
     var promoMessageLabel = UILabel()
     var bottomDescriptionLabel = UILabel()
-    var contentTable = ContentTableView()
-    var contents: [Content]?
+    var bottomContentView = UIStackView()
+    var indexPathRow: Int?
+    weak var delegate: CellImageDelegate?
+    var viewModel: CustomCellViewModel?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentTable = ContentTableView(frame: self.frame, style: .plain)
-        contentTable.isScrollEnabled = false
+        bottomContentView.backgroundColor = .cyan
         
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         topDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         promoMessageLabel.translatesAutoresizingMaskIntoConstraints = false
         bottomDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentTable.translatesAutoresizingMaskIntoConstraints = false
-
+        bottomContentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        
         
         contentView.layoutMargins = .zero
         contentView.preservesSuperviewLayoutMargins = false
@@ -39,7 +45,7 @@ class CustomCell: UITableViewCell {
         contentView.addSubview(titleLabel)
         contentView.addSubview(promoMessageLabel)
         contentView.addSubview(bottomDescriptionLabel)
-        contentView.addSubview(contentTable)
+        contentView.addSubview(bottomContentView)
         
         topDescriptionLabel.textAlignment = .center
         titleLabel.textAlignment = .center
@@ -56,7 +62,12 @@ class CustomCell: UITableViewCell {
         //TODO: Testing
 //        contentTable.backgroundColor = .cyan
         
-        contentTable.separatorStyle = .none
+        bottomContentView.axis = .vertical
+        bottomContentView.spacing = 8
+        bottomContentView.alignment = .fill
+        bottomContentView.distribution = .fillEqually
+        
+        
         
         setupLayoutConstraints()
     }
@@ -65,7 +76,24 @@ class CustomCell: UITableViewCell {
         fatalError("init(coder:) has not been implmeneted")
     }
     
-    func setupLayoutConstraints() {
+    func configure(dataModel: LocalDataModel) {
+        viewModel?.dataModel = dataModel
+        
+        configureBackgroundImage(with: dataModel.backgroundImage)
+        self.titleLabel.text = dataModel.title
+        self.promoMessageLabel.text = dataModel.promoMessage
+        self.topDescriptionLabel.text = dataModel.topDescription
+        setupContent()
+        setupLayoutConstraints()
+        
+        if let bottomDescripton = dataModel.bottomDescription {
+            setAttributedText(with: bottomDescripton)
+        }
+        contentView.setNeedsLayout()
+        contentView.layoutIfNeeded()
+    }
+    
+    private func setupLayoutConstraints() {
         NSLayoutConstraint.activate([
             backgroundImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
             backgroundImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0),
@@ -97,14 +125,12 @@ class CustomCell: UITableViewCell {
         ])
         
         NSLayoutConstraint.activate([
-            contentTable.topAnchor.constraint(equalTo: bottomDescriptionLabel.bottomAnchor, constant: 20),
-            contentTable.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30),
-            contentTable.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
-            contentTable.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
+            bottomContentView.topAnchor.constraint(equalTo: bottomDescriptionLabel.bottomAnchor, constant: 20),
+            bottomContentView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30),
+            bottomContentView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
+            bottomContentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
+            bottomContentView.heightAnchor.constraint(equalToConstant: 100)
         ])
-        
-        contentView.setNeedsLayout()
-        contentView.layoutIfNeeded()
     }
     
     func configureBackgroundImage(with image: UIImage) {
@@ -163,34 +189,27 @@ class CustomCell: UITableViewCell {
         }
     }
     
-    func setupContentTable(contents: [Content]) {
-        self.contents = contents
-        contentTable.dataSource = self
-        contentTable.delegate = self
-        contentTable.register(ButtonCell.self, forCellReuseIdentifier: "ButtonCell")
-        backgroundImageView.setNeedsLayout()
-        backgroundImageView.layoutIfNeeded()
+    func setupContent() {
+        guard let contents = viewModel?.dataModel?.content else {
+            return
+        }
+       
+        for _ in 1...10 {
+            let button = UIButton(type: .system)
+            button.setTitle("Button", for: .normal)
+            button.backgroundColor = .systemBlue
+            button.setTitleColor(.white, for: .normal)
+            button.layer.cornerRadius = 8
+            button.heightAnchor.constraint(equalToConstant: 44).isActive = true
+            
+            bottomContentView.addArrangedSubview(button)
+        }
+        
     }
 }
 
-extension CustomCell: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return contents?.count ?? 0
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ButtonCell", for: indexPath) as! ButtonCell
-        guard let content = contents?[indexPath.row] else {
-            return cell
-        }
-        
-        // Configure the button
-        cell.button.setTitle(content.title, for: .normal)
-        cell.button.tag = indexPath.row  // Store the index in the button tag
-        
-        // Add target to the button
-//        cell.button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-        
-        return cell
-    }
+class CustomCellViewModel {
+    var dataModel: LocalDataModel?
+    
+    
 }

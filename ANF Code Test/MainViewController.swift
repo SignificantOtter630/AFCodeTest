@@ -9,74 +9,103 @@ import Foundation
 import UIKit
 
 class MainViewController: UIViewController {
-    var tableView: UITableView!
+    var stackView: UITableView!
     var viewModel: MainViewModel!
-    var exploreData: [DataModel]?
+    var localDataModels: [LocalDataModel]?
+    private var isUsingLocalJson = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        let spinnerVC = SpinnerViewController()
+
         viewModel = MainViewModel()
-        exploreData = viewModel.exploreData
-//        viewModel.fetchData { data in
-//            DispatchQueue.main.async {
-//                self.exploreData = data
-//                self.tableView.reloadData()
-//            }
-//        }
-//
-        tableView = UITableView(frame: self.view.bounds, style: .plain)
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = .systemBackground
+        if isUsingLocalJson {
+            localDataModels = viewModel.exploreData
+        } else {
+            viewModel.fetchDataModel { data in
+                DispatchQueue.main.async {
+                    spinnerVC.willMove(toParent: nil)
+                    spinnerVC.view.removeFromSuperview()
+                    spinnerVC.removeFromParent()
+                    self.localDataModels = data
+                    self.stackView.reloadData()
+                }
+            }
+        }
+       
+        stackView = UITableView(frame: self.view.bounds, style: .plain)
+        stackView.separatorStyle = .none
+        stackView.backgroundColor = .systemBackground
+        stackView.rowHeight = UITableView.automaticDimension
         
-        tableView.delegate = self
-        tableView.dataSource = self
+        stackView.delegate = self
+        stackView.dataSource = self
         
-        tableView.register(CustomCell.self, forCellReuseIdentifier: "CustomCell")
+        stackView.register(CustomCell.self, forCellReuseIdentifier: "CustomCell")
         
-        self.view.addSubview(tableView)
+        self.view.addSubview(stackView)
         
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor)
+            stackView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            stackView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
+            stackView.rightAnchor.constraint(equalTo: self.view.rightAnchor)
         ])
         
+        if !isUsingLocalJson {
+            // add the spinner view controller
+            addChild(spinnerVC)
+            spinnerVC.view.frame = view.frame
+            view.addSubview(spinnerVC.view)
+            spinnerVC.didMove(toParent: self)
+        }
+       
     }
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return exploreData?.count ?? 0
+        return localDataModels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomCell
+        // set delegate
+        cell.delegate = self
         cell.selectionStyle = .none
-        if let backgroundImageString = exploreData?[indexPath.row].backgroundImage {
-            if let backgroundImage = UIImage(named: backgroundImageString) {
-                cell.backgroundImageView.image = backgroundImage
-                cell.configureBackgroundImage(with: backgroundImage)
-            }
+        if let localDataModel = localDataModels?[indexPath.row] {
+            cell.configure(dataModel: localDataModel)
         }
-        
-        
-        cell.titleLabel.text = exploreData?[indexPath.row].title
-        cell.promoMessageLabel.text = exploreData?[indexPath.row].promoMessage
-        cell.topDescriptionLabel.text = exploreData?[indexPath.row].topDescription
-        if let bottomDescriptionString = exploreData?[indexPath.row].bottomDescription {
-            cell.setAttributedText(with: bottomDescriptionString)
-        }
-        
-        if let contents =  exploreData?[indexPath.row].content {
-            cell.setupContentTable(contents: contents)
-        }
-        
-        cell.setupLayoutConstraints()
-       
+
+        cell.indexPathRow = indexPath.row
+  
         return cell
     }
     
+}
+
+extension MainViewController: CellImageDelegate {
+    func didLoadImage(for cell: CustomCell, image: UIImage) {
+        cell.configureBackgroundImage(with: image)
+    }
+}
+
+class SpinnerViewController: UIViewController {
+    var spinner = UIActivityIndicatorView(style: .large)
+    
+    override func loadView() {
+        view = UIView()
+        view.backgroundColor = UIColor(white: 0, alpha: 0.7)
+        
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.startAnimating()
+        view.addSubview(spinner)
+        
+        NSLayoutConstraint.activate([
+            spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            spinner.widthAnchor.constraint(equalToConstant: 100),
+        ])
+    }
 }
