@@ -36,7 +36,7 @@ class MainViewController: UIViewController {
         // Create the ScrollView
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
-        
+        scrollView.backgroundColor = UIColor(hex: "FFF7E4")
         // Pin ScrollView to the edges of the parent view
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
@@ -55,11 +55,11 @@ class MainViewController: UIViewController {
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor) // To make sure it scrolls horizontally if necessary
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
         ])
         
         // Create the stack view
-        stackView.axis = .vertical // or .horizontal depending on the direction
+        stackView.axis = .vertical
         stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(stackView)
@@ -76,33 +76,14 @@ class MainViewController: UIViewController {
     }
     
     func setupCustomCards() {
-        
         for localDataModel in viewModel.localDataModels {
             let customCard = CustomCard()
             
             stackView.addArrangedSubview(customCard)
-            let customCardVM = CustomCardViewModel(dataModel: localDataModel)
+            let customCardVM = CustomCardViewModel(dataModel: localDataModel, serviceManager: viewModel.serviceManager)
             customCard.configure(viewModel: customCardVM)
             stackView.layoutIfNeeded()
         }
     }
 }
 
-class SpinnerViewController: UIViewController {
-    private var spinner = UIActivityIndicatorView(style: .large)
-    
-    override func loadView() {
-        view = UIView()
-        view.backgroundColor = UIColor(white: 0, alpha: 0.7)
-        
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.startAnimating()
-        view.addSubview(spinner)
-        
-        NSLayoutConstraint.activate([
-            spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            spinner.widthAnchor.constraint(equalToConstant: 100),
-        ])
-    }
-}

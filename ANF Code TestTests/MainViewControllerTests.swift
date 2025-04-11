@@ -53,6 +53,11 @@ class MainViewControllerTests: XCTestCase {
 }
 
 class MockServiceManager: ServiceProtocol {
+    var didfetchImageModel = false
+    func fetchImage(imageString: String, completion: @escaping (UIImage?) -> Void) {
+        didfetchImageModel = true
+    }
+    
     var didFetchDataModel = false
     func fetchDataModel(completion: @escaping ([LocalDataModel]) -> ()) {
         didFetchDataModel = true

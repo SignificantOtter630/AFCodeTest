@@ -1,28 +1,12 @@
 //
-//  DataModel.swift
+//  LocalDataModel.swift
 //  ANF Code Test
 //
-//  Created by Louis on 4/9/25.
+//  Created by Louis on 4/11/25.
 //
 
 import Foundation
 import UIKit
-
-struct DataModel: Codable {
-    let title: String?
-    let backgroundImage: String?
-    let content: [Content]?
-    let promoMessage: String?
-    let topDescription: String?
-    let bottomDescription: String?
-}
-
-// MARK: - Content model
-struct Content: Codable {
-    let target: String?
-    let title: String?
-    let elementType: String?
-}
 
 class LocalDataModel {
     let title: String?

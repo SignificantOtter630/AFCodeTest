@@ -32,6 +32,7 @@ class CustomCard: UIStackView {
     // configures all the UI for a card
     func configure(viewModel: CustomCardViewModel) {
         self.viewModel = viewModel
+        backgroundImageView.backgroundColor = UIColor(hex: "FFF7E4")
         
         spinnerView.translatesAutoresizingMaskIntoConstraints = false
         spinnerView.startSpinner()
@@ -81,6 +82,7 @@ class CustomCard: UIStackView {
         }
         self.titleLabel.text = viewModel.dataModel.title
         self.promoMessageLabel.text = viewModel.dataModel.promoMessage
+        self.promoMessageLabel.textColor = .darkGray
         self.topDescriptionLabel.text = viewModel.dataModel.topDescription
         if let contents = viewModel.dataModel.content {
             setupContentStack(with: contents)
@@ -93,6 +95,7 @@ class CustomCard: UIStackView {
         self.layoutIfNeeded()
     }
     
+    // MARK: setupLayoutConstraints sets the constraints
     private func setupLayoutConstraints() {
         NSLayoutConstraint.activate([
             spinnerView.topAnchor.constraint(equalTo: topAnchor),
@@ -126,7 +129,7 @@ class CustomCard: UIStackView {
         ])
         
         NSLayoutConstraint.activate([
-            bottomDescriptionTextView.topAnchor.constraint(equalTo: promoMessageLabel.bottomAnchor, constant: 20),
+            bottomDescriptionTextView.topAnchor.constraint(equalTo: promoMessageLabel.bottomAnchor, constant: 15),
             bottomDescriptionTextView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
             bottomDescriptionTextView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
         ])
@@ -139,6 +142,7 @@ class CustomCard: UIStackView {
         ])
     }
     
+    // MARK: configureBackgroundImage sets up the backgroundImage. Sets the height of the image view based on the aspect ratio of the image
     func configureBackgroundImage(with image: UIImage) {
         // Set the image for the UIImageView
         self.backgroundImageView.image = image
@@ -158,17 +162,16 @@ class CustomCard: UIStackView {
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }
-    
+    // MARK: setAttributedText sets up the bottomDescription text
     func setAttributedText(with string: String) {
         // Configure text view properties
         bottomDescriptionTextView.isEditable = false
         bottomDescriptionTextView.isScrollEnabled = false
         bottomDescriptionTextView.backgroundColor = .clear
-        bottomDescriptionTextView.textAlignment = .center // Set alignment here
+        bottomDescriptionTextView.textAlignment = .center
         
-        // Set default values if none provided
         let font = UIFont.systemFont(ofSize: 13)
-        let linkTextColor = UIColor.label
+        let textColor = UIColor.lightGray
         
         // Convert HTML to attributed string
         if let data = string.data(using: .utf8) {
@@ -190,7 +193,7 @@ class CustomCard: UIStackView {
                 
                 // Apply custom styling to links
                 bottomDescriptionTextView.linkTextAttributes = [
-                    .foregroundColor: linkTextColor,
+                    .foregroundColor: textColor,
                     .underlineStyle: 0, // No underline
                     .font: font
                 ]
@@ -198,6 +201,7 @@ class CustomCard: UIStackView {
                 // Apply base font and alignment to entire string
                 let fullRange = NSRange(location: 0, length: attributedString.length)
                 attributedString.addAttributes([
+                    .foregroundColor: textColor,
                     .font: font,
                     .paragraphStyle: paragraphStyle
                 ], range: fullRange)
@@ -214,45 +218,15 @@ class CustomCard: UIStackView {
         }
     }
     
+    // MARK: setupContentStack sets up the content buttons on the bottom
     func setupContentStack(with contents: [Content]) {
         for content in contents {
-            let button = UIButton(type: .system)
-            button.setTitle(content.title, for: .normal)
-            button.translatesAutoresizingMaskIntoConstraints = false
-            button.backgroundColor = .white
-            button.setTitleColor(.black, for: .normal)
-            button.layer.borderWidth = 3
-            button.layer.borderColor = UIColor.systemGray.cgColor
+            let button = ContentButton(content: content)
+            
             bottomContentStack.addArrangedSubview(button)
+            button.heightAnchor.constraint(equalToConstant: 50).isActive = true
         }
         
         bottomContentStack.layoutIfNeeded()
-        
     }
 }
-
-
-
-class ImageSpinnerView: UIView {
-    private var spinner = UIActivityIndicatorView(style: .medium)
-    
-    func startSpinner() {
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.startAnimating()
-        addSubview(spinner)
-        
-        NSLayoutConstraint.activate([
-            spinner.topAnchor.constraint(equalTo: topAnchor),
-            spinner.leftAnchor.constraint(equalTo: leftAnchor),
-            spinner.rightAnchor.constraint(equalTo: rightAnchor),
-            spinner.bottomAnchor.constraint(equalTo: bottomAnchor),
-        ])
-    }
-    
-    func stopSpinner() {
-        spinner.stopAnimating()
-    }
-    
-    
-}
-

@@ -13,13 +13,18 @@
 		3E727EDA26727088006C11AC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E727ED826727088006C11AC /* Main.storyboard */; };
 		3E727EDC2672708B006C11AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3E727EDB2672708B006C11AC /* Assets.xcassets */; };
 		3E727EDF2672708B006C11AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3E727EDD2672708B006C11AC /* LaunchScreen.storyboard */; };
-		3E727EEA2672708B006C11AC /* ANFExploreCardTableViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E727EE92672708B006C11AC /* ANFExploreCardTableViewControllerTests.swift */; };
 		BF63D1E42DA6E12D0010937D /* CustomCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D1E32DA6E12D0010937D /* CustomCard.swift */; };
 		BF63D1E62DA6EAF80010937D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D1E52DA6EAF80010937D /* MainViewController.swift */; };
 		BF63D1E82DA6EF040010937D /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D1E72DA6EF040010937D /* MainViewModel.swift */; };
 		BF63D1EE2DA72E800010937D /* DataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D1ED2DA72E800010937D /* DataModel.swift */; };
 		BF63D22C2DA8C5050010937D /* CustomCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D22B2DA8C5050010937D /* CustomCardViewModel.swift */; };
 		BF63D22E2DA8CAE10010937D /* MainViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D22D2DA8CAE10010937D /* MainViewControllerTests.swift */; };
+		BF63D2302DA980110010937D /* CustomCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D22F2DA980110010937D /* CustomCardTests.swift */; };
+		BF63D2322DA995FC0010937D /* ServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D2312DA995FC0010937D /* ServiceManager.swift */; };
+		BF63D2342DA996590010937D /* ContentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D2332DA996590010937D /* ContentButton.swift */; };
+		BF63D2362DA996820010937D /* Spinners.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D2352DA996820010937D /* Spinners.swift */; };
+		BF63D2382DA996E30010937D /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D2372DA996E30010937D /* Extensions.swift */; };
+		BF63D23D2DA9977C0010937D /* LocalDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF63D23C2DA9977C0010937D /* LocalDataModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,7 +47,6 @@
 		3E727EDE2672708B006C11AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3E727EE02672708B006C11AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3E727EE52672708B006C11AC /* ANF Code TestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ANF Code TestTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3E727EE92672708B006C11AC /* ANFExploreCardTableViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ANFExploreCardTableViewControllerTests.swift; sourceTree = "<group>"; };
 		3E727EEB2672708B006C11AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BF63D1E32DA6E12D0010937D /* CustomCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCard.swift; sourceTree = "<group>"; };
 		BF63D1E52DA6EAF80010937D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -50,6 +54,12 @@
 		BF63D1ED2DA72E800010937D /* DataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
 		BF63D22B2DA8C5050010937D /* CustomCardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCardViewModel.swift; sourceTree = "<group>"; };
 		BF63D22D2DA8CAE10010937D /* MainViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewControllerTests.swift; sourceTree = "<group>"; };
+		BF63D22F2DA980110010937D /* CustomCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCardTests.swift; sourceTree = "<group>"; };
+		BF63D2312DA995FC0010937D /* ServiceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceManager.swift; sourceTree = "<group>"; };
+		BF63D2332DA996590010937D /* ContentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentButton.swift; sourceTree = "<group>"; };
+		BF63D2352DA996820010937D /* Spinners.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Spinners.swift; sourceTree = "<group>"; };
+		BF63D2372DA996E30010937D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		BF63D23C2DA9977C0010937D /* LocalDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +101,9 @@
 		3E727ED126727088006C11AC /* ANF Code Test */ = {
 			isa = PBXGroup;
 			children = (
+				BF63D23E2DA997B80010937D /* Networking */,
+				BF63D23B2DA997650010937D /* Models */,
+				BF63D2392DA997240010937D /* MainScreen */,
 				3E727ED226727088006C11AC /* AppDelegate.swift */,
 				3E727ED426727088006C11AC /* SceneDelegate.swift */,
 				3E727ED826727088006C11AC /* Main.storyboard */,
@@ -98,11 +111,7 @@
 				3E727EDD2672708B006C11AC /* LaunchScreen.storyboard */,
 				3E727EE02672708B006C11AC /* Info.plist */,
 				3E4AB9392676D86100C79456 /* exploreData.json */,
-				BF63D1E32DA6E12D0010937D /* CustomCard.swift */,
-				BF63D1E52DA6EAF80010937D /* MainViewController.swift */,
-				BF63D1E72DA6EF040010937D /* MainViewModel.swift */,
-				BF63D1ED2DA72E800010937D /* DataModel.swift */,
-				BF63D22B2DA8C5050010937D /* CustomCardViewModel.swift */,
+				BF63D2372DA996E30010937D /* Extensions.swift */,
 			);
 			path = "ANF Code Test";
 			sourceTree = "<group>";
@@ -110,11 +119,49 @@
 		3E727EE82672708B006C11AC /* ANF Code TestTests */ = {
 			isa = PBXGroup;
 			children = (
-				3E727EE92672708B006C11AC /* ANFExploreCardTableViewControllerTests.swift */,
 				3E727EEB2672708B006C11AC /* Info.plist */,
 				BF63D22D2DA8CAE10010937D /* MainViewControllerTests.swift */,
+				BF63D22F2DA980110010937D /* CustomCardTests.swift */,
 			);
 			path = "ANF Code TestTests";
+			sourceTree = "<group>";
+		};
+		BF63D2392DA997240010937D /* MainScreen */ = {
+			isa = PBXGroup;
+			children = (
+				BF63D2352DA996820010937D /* Spinners.swift */,
+				BF63D23A2DA997400010937D /* CustomCards */,
+				BF63D1E52DA6EAF80010937D /* MainViewController.swift */,
+				BF63D1E72DA6EF040010937D /* MainViewModel.swift */,
+			);
+			path = MainScreen;
+			sourceTree = "<group>";
+		};
+		BF63D23A2DA997400010937D /* CustomCards */ = {
+			isa = PBXGroup;
+			children = (
+				BF63D2332DA996590010937D /* ContentButton.swift */,
+				BF63D1E32DA6E12D0010937D /* CustomCard.swift */,
+				BF63D22B2DA8C5050010937D /* CustomCardViewModel.swift */,
+			);
+			path = CustomCards;
+			sourceTree = "<group>";
+		};
+		BF63D23B2DA997650010937D /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				BF63D1ED2DA72E800010937D /* DataModel.swift */,
+				BF63D23C2DA9977C0010937D /* LocalDataModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BF63D23E2DA997B80010937D /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				BF63D2312DA995FC0010937D /* ServiceManager.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,11 +266,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				3E727ED326727088006C11AC /* AppDelegate.swift in Sources */,
+				BF63D2342DA996590010937D /* ContentButton.swift in Sources */,
 				BF63D1E42DA6E12D0010937D /* CustomCard.swift in Sources */,
+				BF63D2362DA996820010937D /* Spinners.swift in Sources */,
 				BF63D22C2DA8C5050010937D /* CustomCardViewModel.swift in Sources */,
+				BF63D23D2DA9977C0010937D /* LocalDataModel.swift in Sources */,
+				BF63D2322DA995FC0010937D /* ServiceManager.swift in Sources */,
 				3E727ED526727088006C11AC /* SceneDelegate.swift in Sources */,
 				BF63D1EE2DA72E800010937D /* DataModel.swift in Sources */,
 				BF63D1E62DA6EAF80010937D /* MainViewController.swift in Sources */,
+				BF63D2382DA996E30010937D /* Extensions.swift in Sources */,
 				BF63D1E82DA6EF040010937D /* MainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -232,8 +284,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E727EEA2672708B006C11AC /* ANFExploreCardTableViewControllerTests.swift in Sources */,
 				BF63D22E2DA8CAE10010937D /* MainViewControllerTests.swift in Sources */,
+				BF63D2302DA980110010937D /* CustomCardTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
