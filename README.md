@@ -5,34 +5,34 @@ The app main screen is structured like this
 ```
 -----------------------------------
 |   ScrollView                    | This allows scrolling
-|---------------------------------|                                
-| UIView holding StackView        | This allows the UIView to size height automatically base on the StackView's contents
-| ------------------------------- |
-|  CustomCard: StackView          | This is the individual cards. It sizes height automatically
-|                                 |
-|                                 |
-|                                 |
-|                                 |
-|                                 |
-|                                 |
-| ------------------------------- |                                
-|  CustomCard: StackView          |
-|                                 |
-|                                 |
-|                                 |
-|                                 |
-|                                 |
-|                                 |
-| ------------------------------- |                                
-|   CustomCard: StackView         |
-|                                 |
-|                                 |
-|                                 |
-|                                 |
-|                                 |
-|                                 |
-|                                 |
-|---------------------------------|                                
+|_________________________________|                                
+|| UIView holding StackView      || This allows the UIView to size height automatically base on the StackView's contents
+||-------------------------------||
+|| CustomCard: StackView         || This is the individual cards. It sizes height automatically
+||                               ||
+||                               ||
+||                               ||
+||                               ||
+||                               ||
+||                               ||
+||-------------------------------||                                
+|| CustomCard: StackView         ||
+||                               ||
+||                               ||
+||                               ||
+||                               ||
+||                               ||
+||                               ||
+||-------------------------------||                                
+||  CustomCard: StackView        ||
+||                               ||
+||                               ||
+||                               ||
+||                               ||
+||                               ||
+||                               ||
+||                               ||
+||-------------------------------||                                
 -----------------------------------
 ```
 
