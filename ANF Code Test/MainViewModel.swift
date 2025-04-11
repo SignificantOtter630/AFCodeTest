@@ -8,9 +8,14 @@
 import Foundation
 import UIKit
 
+protocol ServiceProtocol {
+    func fetchDataModel(completion: @escaping ([LocalDataModel]) -> ())
+}
+
 class MainViewModel {
     var localDataModels: [LocalDataModel]!
-    var isUsingLocalJson = false
+    var isUsingLocalJson: Bool!
+    var serviceManager: ServiceProtocol!
     var exploreData: [LocalDataModel]? {
         if let filePath = Bundle.main.path(forResource: "exploreData", ofType: "json"),
            let fileContent = try? Data(contentsOf: URL(fileURLWithPath: filePath)) {
@@ -29,7 +34,12 @@ class MainViewModel {
         return nil
     }
     
-    init(completion: @escaping () -> ()) {
+    init(isUsingLocalJson: Bool, serviceManager: ServiceProtocol) {
+        self.serviceManager = serviceManager
+        self.isUsingLocalJson = isUsingLocalJson
+    }
+    
+    func startFetchingData(completion: @escaping () -> ()) {
         // either decodes the local json or fetch json from the provided url based on isUsingLocalJson Boolean
         if isUsingLocalJson {
             if let data = exploreData {
@@ -37,13 +47,15 @@ class MainViewModel {
                 completion()
             }
         } else {
-            fetchDataModel { data in
+            serviceManager.fetchDataModel { data in
                 self.localDataModels = data
                 completion()
             }
         }
     }
-    
+}
+
+class ServiceManager: ServiceProtocol {
     func fetchDataModel(completion: @escaping ([LocalDataModel]) -> ()) {
         guard let url = URL(string: "https://www.abercrombie.com/anf/nativeapp/qa/codetest/codeTest_exploreData.json") else {
                 print("Invalid URL")

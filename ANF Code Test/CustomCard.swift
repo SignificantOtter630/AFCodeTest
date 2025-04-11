@@ -147,8 +147,6 @@ class CustomCard: UIStackView {
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         
         self.layoutIfNeeded() //this is needed for some reason, otherwise backgroundImageView.frame.width will be zero
-
-        backgroundImageView.backgroundColor = .red
         
         if let size = backgroundImageView.image?.size {
             backgroundImageView.heightAnchor.constraint(equalToConstant: (size.height / size.width) * backgroundImageView.frame.width).isActive = true

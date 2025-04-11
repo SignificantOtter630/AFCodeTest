@@ -22,7 +22,7 @@ class MainViewController: UIViewController {
         view.addSubview(spinnerVC.view)
         spinnerVC.didMove(toParent: self)
         
-        viewModel = MainViewModel {
+        viewModel.startFetchingData {
             DispatchQueue.main.async {
                 self.setupScrollView()
                 spinnerVC.willMove(toParent: nil)
