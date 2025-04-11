@@ -2,6 +2,7 @@
 
 The app main screen is structured like this
 
+```
 -----------------------------------
 |   ScrollView                    | This allows scrolling
 |---------------------------------|                                
@@ -33,6 +34,7 @@ The app main screen is structured like this
 |                                 |
 |---------------------------------|                                
 -----------------------------------
+```
 
 The data from the server flows like this
 
