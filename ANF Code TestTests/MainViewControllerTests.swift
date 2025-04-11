@@ -32,7 +32,6 @@ class MainViewControllerTests: XCTestCase {
     func testCanFetchLocalData() throws {
         XCTAssert(mainVM.localDataModels != nil)
         XCTAssert(mainVC.viewModel.localDataModels.count == 10)
-        
     }
     
     func testWillFetchData() throws {
@@ -42,14 +41,6 @@ class MainViewControllerTests: XCTestCase {
         }
         
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }
 
 class MockServiceManager: ServiceProtocol {

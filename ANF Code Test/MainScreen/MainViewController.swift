@@ -72,6 +72,7 @@ class MainViewController: UIViewController {
             stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
         
+        // adds CustomCards for each element in LocalDataModels to the stack view
         setupCustomCards()
     }
     

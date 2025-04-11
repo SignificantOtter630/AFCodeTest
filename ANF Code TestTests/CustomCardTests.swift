@@ -31,8 +31,6 @@ class CustomCardTests: XCTestCase {
     }
 
     func testWillFetchImage() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
         customCardVM.fetchImage { _ in
             XCTAssert(self.mockServiceManager.didfetchImageModel)
         }

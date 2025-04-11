@@ -25,6 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             return MainViewController(coder: coder)
         }
         let serviceManager = ServiceManager()
+        // set isUsingLocalJson to true if want to run with exploreData.json instead of doing network calls
         let mainVM = MainViewModel(isUsingLocalJson: false, serviceManager: serviceManager)
         mainVC.viewModel = mainVM
         
