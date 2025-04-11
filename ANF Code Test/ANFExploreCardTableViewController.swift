@@ -12,7 +12,7 @@ class ANFExploreCardTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView1.register(CustomCell.self, forCellReuseIdentifier: "CustomeCell")
+        tableView1.register(CustomCard.self, forCellReuseIdentifier: "CustomeCell")
         tableView1.dataSource = self
         tableView1.delegate = self
         

@@ -9,7 +9,9 @@ import Foundation
 import UIKit
 
 class MainViewController: UIViewController {
-    var stackView: UITableView!
+    let scrollView = UIScrollView()
+    let contentView = UIView()
+    let stackView = UIStackView()
     var viewModel: MainViewModel!
     var localDataModels: [LocalDataModel]?
     private var isUsingLocalJson = true
@@ -21,6 +23,9 @@ class MainViewController: UIViewController {
         viewModel = MainViewModel()
         if isUsingLocalJson {
             localDataModels = viewModel.exploreData
+            spinnerVC.willMove(toParent: nil)
+            spinnerVC.view.removeFromSuperview()
+            spinnerVC.removeFromParent()
         } else {
             viewModel.fetchDataModel { data in
                 DispatchQueue.main.async {
@@ -28,30 +33,11 @@ class MainViewController: UIViewController {
                     spinnerVC.view.removeFromSuperview()
                     spinnerVC.removeFromParent()
                     self.localDataModels = data
-                    self.stackView.reloadData()
                 }
             }
         }
-       
-        stackView = UITableView(frame: self.view.bounds, style: .plain)
-        stackView.separatorStyle = .none
-        stackView.backgroundColor = .systemBackground
-        stackView.rowHeight = UITableView.automaticDimension
         
-        stackView.delegate = self
-        stackView.dataSource = self
-        
-        stackView.register(CustomCell.self, forCellReuseIdentifier: "CustomCell")
-        
-        self.view.addSubview(stackView)
-        
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            stackView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
-            stackView.rightAnchor.constraint(equalTo: self.view.rightAnchor)
-        ])
+        setupScrollView()
         
         if !isUsingLocalJson {
             // add the spinner view controller
@@ -61,32 +47,71 @@ class MainViewController: UIViewController {
             spinnerVC.didMove(toParent: self)
         }
        
-    }
-}
-
-extension MainViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return localDataModels?.count ?? 0
+        
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomCell
-        // set delegate
-        cell.delegate = self
-        cell.selectionStyle = .none
-        if let localDataModel = localDataModels?[indexPath.row] {
-            cell.configure(dataModel: localDataModel)
+    func setupScrollView() {
+        // Create the ScrollView
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        
+        // Pin ScrollView to the edges of the parent view
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        // Create the content view inside the scroll view
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        
+        // Pin content view to the edges of the scroll view
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor) // To make sure it scrolls horizontally if necessary
+        ])
+        
+        // Create the stack view
+        stackView.axis = .vertical // or .horizontal depending on the direction
+        stackView.spacing = 10
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(stackView)
+        
+        // Set constraints for the stack view
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+        ])
+        
+        setupCustomCards()
+    }
+    
+    func setupCustomCards() {
+        guard let unrwappedlocalDataModels = localDataModels else {
+            return
         }
-
-        cell.indexPathRow = indexPath.row
-  
-        return cell
+        for localDataModel in unrwappedlocalDataModels {
+            let customCard = CustomCard()
+            
+            stackView.addArrangedSubview(customCard)
+            customCard.configure(dataModel: localDataModel)
+            stackView.layoutIfNeeded()
+           
+        }
+        
+       
     }
-    
 }
 
 extension MainViewController: CellImageDelegate {
-    func didLoadImage(for cell: CustomCell, image: UIImage) {
+    func didLoadImage(for cell: CustomCard, image: UIImage) {
         cell.configureBackgroundImage(with: image)
     }
 }

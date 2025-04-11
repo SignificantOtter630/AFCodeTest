@@ -9,43 +9,39 @@ import Foundation
 import UIKit
 
 protocol CellImageDelegate: AnyObject {
-    func didLoadImage(for cell: CustomCell, image: UIImage)
+    func didLoadImage(for cell: CustomCard, image: UIImage)
 }
 
-class CustomCell: UITableViewCell {
+class CustomCard: UIStackView {
     var backgroundImageView = UIImageView()
     var topDescriptionLabel = UILabel()
     var titleLabel = UILabel()
     var promoMessageLabel = UILabel()
     var bottomDescriptionLabel = UILabel()
-    var bottomContentView = UIStackView()
+    var bottomContentStack = UIStackView()
     var indexPathRow: Int?
     weak var delegate: CellImageDelegate?
     var viewModel: CustomCellViewModel?
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
-        bottomContentView.backgroundColor = .cyan
         
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         topDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         promoMessageLabel.translatesAutoresizingMaskIntoConstraints = false
         bottomDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
-        bottomContentView.translatesAutoresizingMaskIntoConstraints = false
+        bottomContentStack.translatesAutoresizingMaskIntoConstraints = false
         
         
-        
-        contentView.layoutMargins = .zero
-        contentView.preservesSuperviewLayoutMargins = false
-        
-        contentView.addSubview(backgroundImageView)
-        contentView.addSubview(topDescriptionLabel)
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(promoMessageLabel)
-        contentView.addSubview(bottomDescriptionLabel)
-        contentView.addSubview(bottomContentView)
+        addSubview(backgroundImageView)
+        addSubview(topDescriptionLabel)
+        addSubview(titleLabel)
+        addSubview(promoMessageLabel)
+        addSubview(bottomDescriptionLabel)
+        addSubview(bottomContentStack)
         
         topDescriptionLabel.textAlignment = .center
         titleLabel.textAlignment = .center
@@ -58,22 +54,20 @@ class CustomCell: UITableViewCell {
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         promoMessageLabel.font = UIFont.systemFont(ofSize: 11)
         bottomDescriptionLabel.font = UIFont.systemFont(ofSize: 13)
-        
-        //TODO: Testing
-//        contentTable.backgroundColor = .cyan
-        
-        bottomContentView.axis = .vertical
-        bottomContentView.spacing = 8
-        bottomContentView.alignment = .fill
-        bottomContentView.distribution = .fillEqually
+                
+        bottomContentStack.axis = .vertical
+        bottomContentStack.spacing = 8
+        bottomContentStack.alignment = .fill
+        bottomContentStack.distribution = .fillEqually
         
         
         
         setupLayoutConstraints()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implmeneted")
+    
+    required init(coder: NSCoder) {
+        super.init(coder: coder)
     }
     
     func configure(dataModel: LocalDataModel) {
@@ -83,76 +77,76 @@ class CustomCell: UITableViewCell {
         self.titleLabel.text = dataModel.title
         self.promoMessageLabel.text = dataModel.promoMessage
         self.topDescriptionLabel.text = dataModel.topDescription
-        setupContent()
-        setupLayoutConstraints()
+        if let contents = dataModel.content {
+            setupContentStack(with: contents)
+        }
         
+        setupLayoutConstraints()
+
         if let bottomDescripton = dataModel.bottomDescription {
             setAttributedText(with: bottomDescripton)
         }
-        contentView.setNeedsLayout()
-        contentView.layoutIfNeeded()
+        self.layoutIfNeeded()
     }
     
     private func setupLayoutConstraints() {
         NSLayoutConstraint.activate([
-            backgroundImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 0),
-            backgroundImageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0),
-            backgroundImageView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: 0),
+            backgroundImageView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+            backgroundImageView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
+            backgroundImageView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
         ])
         
         NSLayoutConstraint.activate([
             topDescriptionLabel.topAnchor.constraint(equalTo: backgroundImageView.bottomAnchor, constant: 25),
-            topDescriptionLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0),
-            topDescriptionLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: 0),
+            topDescriptionLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
+            topDescriptionLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
         ])
         
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: topDescriptionLabel.bottomAnchor, constant: 8),
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0),
-            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: 0),
+            titleLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
+            titleLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
         ])
         
         NSLayoutConstraint.activate([
             promoMessageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
-            promoMessageLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0),
-            promoMessageLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: 0),
+            promoMessageLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
+            promoMessageLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
         ])
         
         NSLayoutConstraint.activate([
             bottomDescriptionLabel.topAnchor.constraint(equalTo: promoMessageLabel.bottomAnchor, constant: 20),
-            bottomDescriptionLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 0),
-            bottomDescriptionLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: 0),
+            bottomDescriptionLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
+            bottomDescriptionLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
         ])
         
         NSLayoutConstraint.activate([
-            bottomContentView.topAnchor.constraint(equalTo: bottomDescriptionLabel.bottomAnchor, constant: 20),
-            bottomContentView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30),
-            bottomContentView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
-            bottomContentView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
-            bottomContentView.heightAnchor.constraint(equalToConstant: 100)
+            bottomContentStack.topAnchor.constraint(equalTo: bottomDescriptionLabel.bottomAnchor, constant: 20),
+            bottomContentStack.leftAnchor.constraint(equalTo: leftAnchor, constant: 30),
+            bottomContentStack.rightAnchor.constraint(equalTo: rightAnchor, constant: -30),
+            bottomContentStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
+            bottomContentStack.heightAnchor.constraint(equalToConstant: 100)
         ])
     }
     
     func configureBackgroundImage(with image: UIImage) {
         // Set the image for the UIImageView
+        self.backgroundImageView.image = image
         backgroundImageView.contentMode = .scaleAspectFit
         
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        
-        self.backgroundImageView.image = image
+        self.layoutIfNeeded() //this is needed for some reason, otherwise backgroundImageView.frame.width will be zero
 
-        backgroundImageView.widthAnchor.constraint(equalToConstant: contentView.frame.width).isActive = true
+        backgroundImageView.backgroundColor = .red
         
-        backgroundImageView.layoutIfNeeded()
-        backgroundImageView.image = image
         if let size = backgroundImageView.image?.size {
             backgroundImageView.heightAnchor.constraint(equalToConstant: (size.height / size.width) * backgroundImageView.frame.width).isActive = true
         }
         
         // After setting the image, force the layout to update
-        backgroundImageView.setNeedsLayout()
-        backgroundImageView.layoutIfNeeded()
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
     
     func setAttributedText(with string: String) {
@@ -189,27 +183,39 @@ class CustomCell: UITableViewCell {
         }
     }
     
-    func setupContent() {
-        guard let contents = viewModel?.dataModel?.content else {
-            return
-        }
+    func setupContentStack(with contents: [Content]) {
        
-        for _ in 1...10 {
+//        for i in 1...5 {
+//            let button = UIButton(type: .system)
+//            button.setTitle("Button \(i)", for: .normal)
+//            button.backgroundColor = .systemBlue
+//            button.setTitleColor(.white, for: .normal)
+//            button.layer.cornerRadius = 8
+//            button.heightAnchor.constraint(equalToConstant: 50).isActive = true
+////            button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+//            bottomContentStack.addArrangedSubview(button)
+//        }
+        
+        for content in contents {
             let button = UIButton(type: .system)
-            button.setTitle("Button", for: .normal)
-            button.backgroundColor = .systemBlue
-            button.setTitleColor(.white, for: .normal)
-            button.layer.cornerRadius = 8
-            button.heightAnchor.constraint(equalToConstant: 44).isActive = true
-            
-            bottomContentView.addArrangedSubview(button)
+            button.setTitle(content.title, for: .normal)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.backgroundColor = .white
+            button.setTitleColor(.black, for: .normal)
+            button.layer.borderWidth = 3
+            button.layer.borderColor = UIColor.systemGray.cgColor
+            bottomContentStack.addArrangedSubview(button)
         }
+        
+        bottomContentStack.layoutIfNeeded()
         
     }
 }
 
 class CustomCellViewModel {
     var dataModel: LocalDataModel?
-    
+}
+
+class TestStackView {
     
 }
