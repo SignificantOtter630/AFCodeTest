@@ -10,7 +10,7 @@ import UIKit
 
 class MainViewModel {
     var localDataModels: [LocalDataModel]!
-    var isUsingLocalJson = true
+    var isUsingLocalJson = false
     var exploreData: [LocalDataModel]? {
         if let filePath = Bundle.main.path(forResource: "exploreData", ofType: "json"),
            let fileContent = try? Data(contentsOf: URL(fileURLWithPath: filePath)) {
@@ -30,6 +30,7 @@ class MainViewModel {
     }
     
     init(completion: @escaping () -> ()) {
+        // either decodes the local json or fetch json from the provided url based on isUsingLocalJson Boolean
         if isUsingLocalJson {
             if let data = exploreData {
                 self.localDataModels = data
@@ -65,7 +66,6 @@ class MainViewModel {
                     let localDataModels = dataModels.map {
                         LocalDataModel(from: $0)
                     }
-                    sleep(2)
                     completion(localDataModels)
                 } catch {
                     print("Decoding error: \(error)")
@@ -73,37 +73,5 @@ class MainViewModel {
             }
 
             task.resume()
-    }
-    
-    func fetchImage(from urlString: String, completion: @escaping (UIImage) -> Void) {
-        // a bit of a hack to make the image urls use https
-        let httpsString = urlString.replacingOccurrences(of: "http://", with: "https://")
-        guard let url = URL(string: httpsString) else {
-            print("Invalid URL")
-            return
-        }
-        
-        // Create a data task to fetch the image data
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("Error fetching image: \(error)")
-                return
-            }
-            
-            guard let data = data else {
-                print("No data received")
-                return
-            }
-            
-            // Convert the data into a UIImage
-            if let image = UIImage(data: data) {
-                sleep(2)
-                DispatchQueue.main.async {
-                    completion(image)
-                }
-            } else {
-                print("Failed to create image from data")
-            }
-        }.resume()
     }
 }

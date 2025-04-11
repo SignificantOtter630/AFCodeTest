@@ -8,26 +8,33 @@
 import Foundation
 import UIKit
 
-protocol CellImageDelegate: AnyObject {
-    func didLoadImage(for cell: CustomCard, image: UIImage)
-}
-
 class CustomCard: UIStackView {
-    var backgroundImageView = UIImageView()
-    var topDescriptionLabel = UILabel()
-    var titleLabel = UILabel()
-    var promoMessageLabel = UILabel()
-    var bottomDescriptionTextView = UITextView()
-    var bottomContentStack = UIStackView()
-    var indexPathRow: Int?
-    weak var delegate: CellImageDelegate?
-    var viewModel: CustomCellViewModel?
+    private var spinnerView = ImageSpinnerView()
+    private var backgroundImageView = UIImageView()
+    private var topDescriptionLabel = UILabel()
+    private var titleLabel = UILabel()
+    private var promoMessageLabel = UILabel()
+    private var bottomDescriptionTextView = UITextView()
+    private var bottomContentStack = UIStackView()
+    private var indexPathRow: Int?
+    private var viewModel: CustomCardViewModel?
     
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+    }
+    
+    
+    required init(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    // configures all the UI for a card
+    func configure(viewModel: CustomCardViewModel) {
+        self.viewModel = viewModel
         
-        
+        spinnerView.translatesAutoresizingMaskIntoConstraints = false
+        spinnerView.startSpinner()
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
         topDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -35,7 +42,7 @@ class CustomCard: UIStackView {
         bottomDescriptionTextView.translatesAutoresizingMaskIntoConstraints = false
         bottomContentStack.translatesAutoresizingMaskIntoConstraints = false
         
-        
+        addSubview(spinnerView)
         addSubview(backgroundImageView)
         addSubview(topDescriptionLabel)
         addSubview(titleLabel)
@@ -60,32 +67,27 @@ class CustomCard: UIStackView {
         bottomContentStack.alignment = .fill
         bottomContentStack.distribution = .fillEqually
         
-        
-        
         setupLayoutConstraints()
-    }
-    
-    
-    required init(coder: NSCoder) {
-        super.init(coder: coder)
-    }
-    
-    func configure(dataModel: LocalDataModel) {
-        viewModel?.dataModel = dataModel
         
-        if let image = dataModel.backgroundImage {
+        // if the current model has an image use it to configure the background image, else fetch it then configure
+        if let image = viewModel.dataModel.backgroundImage {
             configureBackgroundImage(with: image)
+        } else {
+            viewModel.fetchImage { image in
+                if let image = image {
+                    self.configureBackgroundImage(with: image)
+                }
+            }
         }
-        self.titleLabel.text = dataModel.title
-        self.promoMessageLabel.text = dataModel.promoMessage
-        self.topDescriptionLabel.text = dataModel.topDescription
-        if let contents = dataModel.content {
+        self.titleLabel.text = viewModel.dataModel.title
+        self.promoMessageLabel.text = viewModel.dataModel.promoMessage
+        self.topDescriptionLabel.text = viewModel.dataModel.topDescription
+        if let contents = viewModel.dataModel.content {
             setupContentStack(with: contents)
         }
         
-        setupLayoutConstraints()
 
-        if let bottomDescripton = dataModel.bottomDescription {
+        if let bottomDescripton = viewModel.dataModel.bottomDescription {
             setAttributedText(with: bottomDescripton)
         }
         self.layoutIfNeeded()
@@ -93,7 +95,14 @@ class CustomCard: UIStackView {
     
     private func setupLayoutConstraints() {
         NSLayoutConstraint.activate([
-            backgroundImageView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+            spinnerView.topAnchor.constraint(equalTo: topAnchor),
+            spinnerView.leftAnchor.constraint(equalTo: leftAnchor),
+            spinnerView.rightAnchor.constraint(equalTo: rightAnchor),
+            spinnerView.bottomAnchor.constraint(equalTo: backgroundImageView.topAnchor),
+            spinnerView.heightAnchor.constraint(equalToConstant: 400),
+        ])
+        
+        NSLayoutConstraint.activate([
             backgroundImageView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
             backgroundImageView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
         ])
@@ -143,6 +152,8 @@ class CustomCard: UIStackView {
         
         if let size = backgroundImageView.image?.size {
             backgroundImageView.heightAnchor.constraint(equalToConstant: (size.height / size.width) * backgroundImageView.frame.width).isActive = true
+            spinnerView.heightAnchor.constraint(equalToConstant: 0).isActive = true
+            spinnerView.stopSpinner()
         }
         
         // After setting the image, force the layout to update
@@ -151,7 +162,6 @@ class CustomCard: UIStackView {
     }
     
     func setAttributedText(with string: String) {
-        
         // Configure text view properties
         bottomDescriptionTextView.isEditable = false
         bottomDescriptionTextView.isScrollEnabled = false
@@ -223,7 +233,28 @@ class CustomCard: UIStackView {
     }
 }
 
-class CustomCellViewModel {
-    var dataModel: LocalDataModel?
+
+
+class ImageSpinnerView: UIView {
+    private var spinner = UIActivityIndicatorView(style: .medium)
+    
+    func startSpinner() {
+        spinner.translatesAutoresizingMaskIntoConstraints = false
+        spinner.startAnimating()
+        addSubview(spinner)
+        
+        NSLayoutConstraint.activate([
+            spinner.topAnchor.constraint(equalTo: topAnchor),
+            spinner.leftAnchor.constraint(equalTo: leftAnchor),
+            spinner.rightAnchor.constraint(equalTo: rightAnchor),
+            spinner.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+    }
+    
+    func stopSpinner() {
+        spinner.stopAnimating()
+    }
+    
+    
 }
 

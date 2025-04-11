@@ -9,9 +9,9 @@ import Foundation
 import UIKit
 
 class MainViewController: UIViewController {
-    let scrollView = UIScrollView()
-    let contentView = UIView()
-    let stackView = UIStackView()
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+    private let stackView = UIStackView()
     var viewModel: MainViewModel!
     
     override func viewDidLoad() {
@@ -81,23 +81,15 @@ class MainViewController: UIViewController {
             let customCard = CustomCard()
             
             stackView.addArrangedSubview(customCard)
-            customCard.configure(dataModel: localDataModel)
+            let customCardVM = CustomCardViewModel(dataModel: localDataModel)
+            customCard.configure(viewModel: customCardVM)
             stackView.layoutIfNeeded()
-           
         }
-        
-       
-    }
-}
-
-extension MainViewController: CellImageDelegate {
-    func didLoadImage(for cell: CustomCard, image: UIImage) {
-        cell.configureBackgroundImage(with: image)
     }
 }
 
 class SpinnerViewController: UIViewController {
-    var spinner = UIActivityIndicatorView(style: .large)
+    private var spinner = UIActivityIndicatorView(style: .large)
     
     override func loadView() {
         view = UIView()
