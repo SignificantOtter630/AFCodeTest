@@ -17,7 +17,7 @@ class CustomCard: UIStackView {
     var topDescriptionLabel = UILabel()
     var titleLabel = UILabel()
     var promoMessageLabel = UILabel()
-    var bottomDescriptionLabel = UILabel()
+    var bottomDescriptionTextView = UITextView()
     var bottomContentStack = UIStackView()
     var indexPathRow: Int?
     weak var delegate: CellImageDelegate?
@@ -32,7 +32,7 @@ class CustomCard: UIStackView {
         topDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         promoMessageLabel.translatesAutoresizingMaskIntoConstraints = false
-        bottomDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+        bottomDescriptionTextView.translatesAutoresizingMaskIntoConstraints = false
         bottomContentStack.translatesAutoresizingMaskIntoConstraints = false
         
         
@@ -40,20 +40,20 @@ class CustomCard: UIStackView {
         addSubview(topDescriptionLabel)
         addSubview(titleLabel)
         addSubview(promoMessageLabel)
-        addSubview(bottomDescriptionLabel)
+        addSubview(bottomDescriptionTextView)
         addSubview(bottomContentStack)
         
         topDescriptionLabel.textAlignment = .center
         titleLabel.textAlignment = .center
         promoMessageLabel.textAlignment = .center
         
-        bottomDescriptionLabel.textAlignment = .center
-        bottomDescriptionLabel.isUserInteractionEnabled = true
+        bottomDescriptionTextView.textAlignment = .center
+        bottomDescriptionTextView.isUserInteractionEnabled = true
         
         topDescriptionLabel.font = UIFont.systemFont(ofSize: 13)
         titleLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
         promoMessageLabel.font = UIFont.systemFont(ofSize: 11)
-        bottomDescriptionLabel.font = UIFont.systemFont(ofSize: 13)
+        bottomDescriptionTextView.font = UIFont.systemFont(ofSize: 13)
                 
         bottomContentStack.axis = .vertical
         bottomContentStack.spacing = 8
@@ -73,7 +73,9 @@ class CustomCard: UIStackView {
     func configure(dataModel: LocalDataModel) {
         viewModel?.dataModel = dataModel
         
-        configureBackgroundImage(with: dataModel.backgroundImage)
+        if let image = dataModel.backgroundImage {
+            configureBackgroundImage(with: image)
+        }
         self.titleLabel.text = dataModel.title
         self.promoMessageLabel.text = dataModel.promoMessage
         self.topDescriptionLabel.text = dataModel.topDescription
@@ -115,17 +117,16 @@ class CustomCard: UIStackView {
         ])
         
         NSLayoutConstraint.activate([
-            bottomDescriptionLabel.topAnchor.constraint(equalTo: promoMessageLabel.bottomAnchor, constant: 20),
-            bottomDescriptionLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
-            bottomDescriptionLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
+            bottomDescriptionTextView.topAnchor.constraint(equalTo: promoMessageLabel.bottomAnchor, constant: 20),
+            bottomDescriptionTextView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
+            bottomDescriptionTextView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
         ])
         
         NSLayoutConstraint.activate([
-            bottomContentStack.topAnchor.constraint(equalTo: bottomDescriptionLabel.bottomAnchor, constant: 20),
+            bottomContentStack.topAnchor.constraint(equalTo: bottomDescriptionTextView.bottomAnchor, constant: 20),
             bottomContentStack.leftAnchor.constraint(equalTo: leftAnchor, constant: 30),
             bottomContentStack.rightAnchor.constraint(equalTo: rightAnchor, constant: -30),
             bottomContentStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -20),
-            bottomContentStack.heightAnchor.constraint(equalToConstant: 100)
         ])
     }
     
@@ -150,52 +151,62 @@ class CustomCard: UIStackView {
     }
     
     func setAttributedText(with string: String) {
-        guard let data = string.data(using: .utf8) else { return }
-
-        let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-            .documentType: NSAttributedString.DocumentType.html,
-            .characterEncoding: String.Encoding.utf8.rawValue
-        ]
-
-        if let attributedText = try? NSMutableAttributedString(data: data, options: options, documentAttributes: nil) {
+        
+        // Configure text view properties
+        bottomDescriptionTextView.isEditable = false
+        bottomDescriptionTextView.isScrollEnabled = false
+        bottomDescriptionTextView.backgroundColor = .clear
+        bottomDescriptionTextView.textAlignment = .center // Set alignment here
+        
+        // Set default values if none provided
+        let font = UIFont.systemFont(ofSize: 13)
+        let linkTextColor = UIColor.label
+        
+        // Convert HTML to attributed string
+        if let data = string.data(using: .utf8) {
+            let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
+                .documentType: NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8.rawValue
+            ]
             
-            // Apply custom styles to the full string
-            let fullRange = NSRange(location: 0, length: attributedText.length)
-            
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.alignment = .center
-
-            attributedText.addAttributes([
-                .paragraphStyle: paragraphStyle,
-                .foregroundColor: UIColor.label,
-                .font: UIFont.systemFont(ofSize: 14) 
-            ], range: fullRange)
-            
-            // Remove underline and blue color from links
-            attributedText.enumerateAttribute(.link, in: fullRange, options: []) { value, range, _ in
-                if value != nil {
-                    attributedText.removeAttribute(.underlineStyle, range: range)
-                    attributedText.addAttribute(.foregroundColor, value: UIColor.label, range: range)
-                }
+            do {
+                let attributedString = try NSMutableAttributedString(
+                    data: data,
+                    options: options,
+                    documentAttributes: nil
+                )
+                
+                // Create paragraph style for alignment
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.alignment = .center
+                
+                // Apply custom styling to links
+                bottomDescriptionTextView.linkTextAttributes = [
+                    .foregroundColor: linkTextColor,
+                    .underlineStyle: 0, // No underline
+                    .font: font
+                ]
+                
+                // Apply base font and alignment to entire string
+                let fullRange = NSRange(location: 0, length: attributedString.length)
+                attributedString.addAttributes([
+                    .font: font,
+                    .paragraphStyle: paragraphStyle
+                ], range: fullRange)
+                
+                bottomDescriptionTextView.attributedText = attributedString
+                
+            } catch {
+                // Fallback to plain text if HTML parsing fails
+                bottomDescriptionTextView.text = string
+                bottomDescriptionTextView.font = font
+                bottomDescriptionTextView.textAlignment = .center
+                print("Error converting HTML: \(error.localizedDescription)")
             }
-            
-            bottomDescriptionLabel.attributedText = attributedText
         }
     }
     
     func setupContentStack(with contents: [Content]) {
-       
-//        for i in 1...5 {
-//            let button = UIButton(type: .system)
-//            button.setTitle("Button \(i)", for: .normal)
-//            button.backgroundColor = .systemBlue
-//            button.setTitleColor(.white, for: .normal)
-//            button.layer.cornerRadius = 8
-//            button.heightAnchor.constraint(equalToConstant: 50).isActive = true
-////            button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-//            bottomContentStack.addArrangedSubview(button)
-//        }
-        
         for content in contents {
             let button = UIButton(type: .system)
             button.setTitle(content.title, for: .normal)
@@ -216,6 +227,3 @@ class CustomCellViewModel {
     var dataModel: LocalDataModel?
 }
 
-class TestStackView {
-    
-}

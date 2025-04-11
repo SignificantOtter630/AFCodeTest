@@ -13,41 +13,23 @@ class MainViewController: UIViewController {
     let contentView = UIView()
     let stackView = UIStackView()
     var viewModel: MainViewModel!
-    var localDataModels: [LocalDataModel]?
-    private var isUsingLocalJson = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let spinnerVC = SpinnerViewController()
-
-        viewModel = MainViewModel()
-        if isUsingLocalJson {
-            localDataModels = viewModel.exploreData
-            spinnerVC.willMove(toParent: nil)
-            spinnerVC.view.removeFromSuperview()
-            spinnerVC.removeFromParent()
-        } else {
-            viewModel.fetchDataModel { data in
-                DispatchQueue.main.async {
-                    spinnerVC.willMove(toParent: nil)
-                    spinnerVC.view.removeFromSuperview()
-                    spinnerVC.removeFromParent()
-                    self.localDataModels = data
-                }
+        addChild(spinnerVC)
+        spinnerVC.view.frame = view.frame
+        view.addSubview(spinnerVC.view)
+        spinnerVC.didMove(toParent: self)
+        
+        viewModel = MainViewModel {
+            DispatchQueue.main.async {
+                self.setupScrollView()
+                spinnerVC.willMove(toParent: nil)
+                spinnerVC.view.removeFromSuperview()
+                spinnerVC.removeFromParent()
             }
         }
-        
-        setupScrollView()
-        
-        if !isUsingLocalJson {
-            // add the spinner view controller
-            addChild(spinnerVC)
-            spinnerVC.view.frame = view.frame
-            view.addSubview(spinnerVC.view)
-            spinnerVC.didMove(toParent: self)
-        }
-       
-        
     }
     
     func setupScrollView() {
@@ -94,10 +76,8 @@ class MainViewController: UIViewController {
     }
     
     func setupCustomCards() {
-        guard let unrwappedlocalDataModels = localDataModels else {
-            return
-        }
-        for localDataModel in unrwappedlocalDataModels {
+        
+        for localDataModel in viewModel.localDataModels {
             let customCard = CustomCard()
             
             stackView.addArrangedSubview(customCard)

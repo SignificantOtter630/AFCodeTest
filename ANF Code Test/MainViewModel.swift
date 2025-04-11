@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 class MainViewModel {
+    var localDataModels: [LocalDataModel]!
+    var isUsingLocalJson = true
     var exploreData: [LocalDataModel]? {
         if let filePath = Bundle.main.path(forResource: "exploreData", ofType: "json"),
            let fileContent = try? Data(contentsOf: URL(fileURLWithPath: filePath)) {
@@ -17,6 +19,7 @@ class MainViewModel {
                 let localDataModels = dataModels.map {
                     LocalDataModel(from: $0)
                 }
+                
                 return localDataModels
             } catch {
                 print("Error decoding JSON: \(error)")
@@ -24,6 +27,20 @@ class MainViewModel {
             }
         }
         return nil
+    }
+    
+    init(completion: @escaping () -> ()) {
+        if isUsingLocalJson {
+            if let data = exploreData {
+                self.localDataModels = data
+                completion()
+            }
+        } else {
+            fetchDataModel { data in
+                self.localDataModels = data
+                completion()
+            }
+        }
     }
     
     func fetchDataModel(completion: @escaping ([LocalDataModel]) -> ()) {

@@ -27,7 +27,7 @@ struct Content: Codable {
 class LocalDataModel {
     let title: String?
     let backgroundImageString: String?
-    var backgroundImage = UIImage()
+    var backgroundImage: UIImage?
     let content: [Content]?
     let promoMessage: String?
     let topDescription: String?
