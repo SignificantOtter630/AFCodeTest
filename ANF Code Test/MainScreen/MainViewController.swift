@@ -82,9 +82,16 @@ class MainViewController: UIViewController {
             
             stackView.addArrangedSubview(customCard)
             let customCardVM = CustomCardViewModel(dataModel: localDataModel, serviceManager: viewModel.serviceManager)
-            customCard.configure(viewModel: customCardVM)
+            customCard.configure(viewModel: customCardVM, parentViewController: self)
             stackView.layoutIfNeeded()
         }
+    }
+}
+
+extension MainViewController: UITextViewDelegate {
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange, interaction: UITextItemInteraction) -> Bool {
+        UIApplication.shared.open(URL)
+        return false
     }
 }
 
