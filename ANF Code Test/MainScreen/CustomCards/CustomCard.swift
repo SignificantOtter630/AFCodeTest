@@ -30,8 +30,10 @@ class CustomCard: UIStackView {
     }
     
     // configures all the UI for a card
-    func configure(viewModel: CustomCardViewModel) {
+    func configure(viewModel: CustomCardViewModel, parentViewController: UITextViewDelegate) {
         self.viewModel = viewModel
+        
+        bottomDescriptionTextView.delegate = parentViewController
         backgroundImageView.backgroundColor = UIColor(hex: "FFF7E4")
         
         spinnerView.translatesAutoresizingMaskIntoConstraints = false
@@ -170,11 +172,14 @@ class CustomCard: UIStackView {
         bottomDescriptionTextView.backgroundColor = .clear
         bottomDescriptionTextView.textAlignment = .center
         
+        
         let font = UIFont.systemFont(ofSize: 13)
         let textColor = UIColor.lightGray
         
+        let fixedString = string.replacingOccurrences(of: "\\\"", with: "\"")
+        
         // Convert HTML to attributed string
-        if let data = string.data(using: .utf8) {
+        if let data = fixedString.data(using: .utf8) {
             let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
                 .documentType: NSAttributedString.DocumentType.html,
                 .characterEncoding: String.Encoding.utf8.rawValue
@@ -210,7 +215,7 @@ class CustomCard: UIStackView {
                 
             } catch {
                 // Fallback to plain text if HTML parsing fails
-                bottomDescriptionTextView.text = string
+                bottomDescriptionTextView.text = fixedString
                 bottomDescriptionTextView.font = font
                 bottomDescriptionTextView.textAlignment = .center
                 print("Error converting HTML: \(error.localizedDescription)")
